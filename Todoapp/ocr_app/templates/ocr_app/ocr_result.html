@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>نتیجه OCR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <main class="container">
+        <h1>متن استخراج شده</h1>
+        <section class="grid">
+            <pre style="background-color: #f0f0f0; padding: 1rem; border-radius: 8px;">{{ text }}</pre>
+            <a href="{% url 'ocr_upload' %}" class="button-primary" style="margin-top: 1rem;">آزمایش با تصویر دیگر</a>
+        </section>
+    </main>
+</body>
+</html>

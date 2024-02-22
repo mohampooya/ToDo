@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if tasks_task.id %}ویرایش کار{% else %}ایجاد کار{% endif %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <main class="container">
+        <h1>{% if tasks_task.id %}ویرایش کار{% else %}افزودن کار جدید{% endif %}</h1>
+        <form action="{% url 'create_task' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">عنوان:</label>
+                <input type="text" id="title" name="title" value="{{ tasks_task.title }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">توضیحات:</label>
+                <textarea id="description" name="description" required>{{ tasks_task.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="task-list">انتخاب لیست:</label>
+                <select id="task-list" name="task_list" required>
+                    <option value="">یک لیست انتخاب کنید...</option>
+                    {% for list in tasks_tasklist %}
+                        <option value="{{ list.id }}" {% if tasks_task.task_list_id == list.id %} selected {% endif %}>{{ list.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button-primary">ذخیره</button>
+                <button type="button" onclick="location.href='{% url 'dashboard' %}'" class="button">لغو</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

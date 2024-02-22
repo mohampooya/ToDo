@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>داشبورد - {{ selected_list.name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        /* Custom CSS for smaller buttons */
+        .small-button {
+            padding: 2px 5px; /* Smaller padding */
+            font-size: 0.8rem; /* Smaller font size */
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul><li><strong>پروفایل کاربری</strong></li></ul>
+        <ul>
+            <li><a href="{% url 'profile_customization' %}">پروفایل</a></li>
+            <li><a href="{% url 'logout' %}">خروج</a></li>
+            <li><a href="#" role="button">ایجاد لیست</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="grid">
+            <section>
+                <hgroup>
+                    <h2>{{ selected_list.name }}</h2>
+                </hgroup>
+                <p>لطفا یک لیست را از منوی کناری انتخاب کنید یا یک لیست جدید ایجاد کنید.</p>
+                <aside class="sidebar">
+                    <label for="task-lists">انتخاب لیست:</label>
+                    <select id="task-lists" name="task-lists" onchange="changeList(this)">
+                        <option value="" {% if not list_id %}selected{% endif %}>انتخاب لیست...</option>
+                        {% for list in tasks_tasklist %}
+                        <option value="{{ list.id }}" {% if selected_list.id == list.id %}selected{% endif %}>{{ list.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button onclick="location.href='{% url 'create_task' %}?list_id={{ selected_list.id }}'">ایجاد کار در {{ selected_list.name }}</button>
+                    <button onclick="location.href='{% url 'create_list' %}'">ایجاد لیست جدید</button>
+                </aside>
+                <ul>
+    {% for task in tasks %}
+    <li class="container-fluid" style="display: flex; align-items: center;">
+        <input type="checkbox" id="task_{{ task.id }}" {% if task.completed %}checked{% endif %} onclick="toggleTaskStatus(this, {{ task.id }});">
+        <label for="task_{{ task.id }}" style="margin-right: 10px;">{{ task.title }}</label>
+        
+        <button onclick="location.href='{% url 'edit_task' task.id %}'" style="margin-right: 12px; width: 80px; padding: 5px; border-radius: 12px; font-size: 0.8rem;">ویرایش</button>
+        
+        <button onclick="if(confirm('آیا اطمینان به حذف این کار دارید؟')) location.href='{% url 'delete_task' task.id %}'" style="width: 80px; padding: 5px; font-size: 0.8rem;border-radius: 12px;">حذف</button>
+    </li>
+    {% endfor %}
+</ul>
+
+            </section>
+        </div>
+    </main>
+    <form action="{% url 'ocr_app:ocr_upload' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button  type="submit">بارگذاری جهت استخراج متن</button>
+</form>
+
+
+    <script>
+        function changeList(select) {
+            var listId = select.value;
+            var url = new URL(window.location.href);
+            url.searchParams.set('list_id', listId); // Set or replace 'list_id' parameter
+            window.location.href = url.href; // Navigate to the modified URL
+        }
+
+        function toggleTaskStatus(checkbox, taskId) {
+            event.stopPropagation(); // Prevent label click from redirecting
+            fetch(`/task/${taskId}/toggle/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'), // Ensure CSRF token is sent
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({'completed': checkbox.checked}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Optionally update the UI based on response
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

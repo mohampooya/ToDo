@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Create New List</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">List Name:</label>
+        <input type="text" id="name" name="name">
+        
+        <button type="submit">Create</button>
+        <button type="button" onclick="location.href='{% url 'dashboard' %}'">Cancel</button>
+    </form>
+</body>
+</html>

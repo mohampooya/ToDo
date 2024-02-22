@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ویرایش کار</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul><li><strong>ویرایش کار</strong></li></ul>
+        <ul>
+            <li><a href="#">داشبورد</a></li>
+            <li><a href="#" onclick="location.href='{% url 'dashboard' %}'">لغو</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="grid">
+            <section>
+                <hgroup>
+                    <h2>ویرایش کار</h2>
+                </hgroup>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }} <!-- Render the form fields here -->
+                    <div class="grid" style="gap: 1rem;">
+                        <button type="submit" class="button-primary">ذخیره تغییرات</button>
+                        <button type="button" onclick="location.href='{% url 'dashboard' %}'" class="button">لغو</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

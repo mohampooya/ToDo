@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>آپلود و پردازش</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <main class="container">
+        <h1>آپلود و پردازش</h1>
+        <form method="post" enctype="multipart/form-data" class="grid" style="gap: 1rem;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button-primary">آپلود و پردازش</button>
+        </form>
+    </main>
+</body>
+</html>
