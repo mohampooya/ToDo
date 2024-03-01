@@ -17,16 +17,10 @@
     <div class="signup-form">
         <form action="{% url 'signup' %}" method="post">
             {% csrf_token %}
-            <form method="post">
-
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
-{% if form.errors %}
-    <p>Your form has errors, please check them below:</p>
-    {{ form.errors }}
-{% endif %}
-
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password" name="password2" placeholder="Confirm Password" required>
             <button type="submit" class="submit-btn">Register</button>
             <a href="{% url 'login' %}" class="login-link">Already have an account? Log in</a>
         </form>

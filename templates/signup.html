@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>ثبت نام</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .signup-form { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
@@ -17,12 +17,18 @@
     <div class="signup-form">
         <form action="{% url 'signup' %}" method="post">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password1" placeholder="Password" required>
-            <input type="password" name="password2" placeholder="Confirm Password" required>
-            <button type="submit" class="submit-btn">Register</button>
-            <a href="{% url 'login' %}" class="login-link">Already have an account? Log in</a>
+            <form method="post">
+
+    {{ form.as_p }}
+    <button type="submit">ثبت نام</button>
+</form>
+{% if form.errors %}
+    <p>Your form has errors, please check them below:</p>
+    {{ form.errors }}
+{% endif %}
+
+            <button type="submit" class="submit-btn">ثبت نام</button>
+            <a href="{% url 'login' %}" class="login-link">از قبل ثبت نام کرده‌اید ؟ وارد شوید</a>
         </form>
     </div>
 </body>

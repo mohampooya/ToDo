@@ -7,6 +7,7 @@ class TaskList(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateField(default=now) 
+    background = models.ImageField(upload_to='backgrounds/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +29,9 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    background = models.ImageField(upload_to='backgrounds/', null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+
 
     def __str__(self):
         return self.user.username

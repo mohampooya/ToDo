@@ -6,7 +6,25 @@
     <title>سفارشی سازی پروفایل</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
 </head>
+    <style>
+       body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            background-size: cover;
+            opacity: 0.4;
+            z-index: -1;
+        }
+</style>
 <body>
+        <div class="background-image" style="background-image: url('{{ user.userprofile.background.url }}');"></div>
+
     <nav class="container-fluid">
         <ul><li><strong>سفارشی سازی پروفایل</strong></li></ul>
         <ul>
@@ -14,14 +32,9 @@
         </ul>
     </nav>
     <main class="container">
-        <div class="grid">
-            <section>
-                <hgroup>
-                    <h2>سفارشی سازی پروفایل خود</h2>
-                </hgroup>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
+        <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
                         <label for="first_name">نام:</label>
                         {{ form.first_name }}
                         {% if form.first_name.errors %}
@@ -52,14 +65,26 @@
                             <div class="form-error">{{ form.profile_picture.errors }}</div>
                         {% endif %}
                     </div>
-
-                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <button type="submit" class="button-primary">ذخیره تغییرات</button>
-                        <button type="button" onclick="location.href='{% url 'dashboard' %}'" class="button">لغو</button>
-                    </div>
-                </form>
-            </section>
-        </div>
+    <div class="form-group">
+        <label for="background_choice">پس‌زمینه داشبورد:</label>
+        {{ form.background_choice }}
+    </div>
+    <div class="form-group" id="customBackgroundUpload" style="display:none;">
+        <label for="custom_background">بارگذاری پس‌زمینه:</label>
+        {{ form.custom_background }}
+    </div>
+    <button type="submit">ذخیره تغییرات</button>
+</form>
+<script>
+document.getElementById('id_background_choice').addEventListener('change', function() {
+    var uploadField = document.getElementById('customBackgroundUpload');
+    if (this.value === 'custom') {
+        uploadField.style.display = 'block';
+    } else {
+        uploadField.style.display = 'none';
+    }
+});
+</script>
     </main>
 </body>
 </html>

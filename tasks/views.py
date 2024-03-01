@@ -6,12 +6,12 @@ from .models import TaskList, Task
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from .forms import BackgroundForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Task
 from django.contrib.auth.decorators import login_required
-
+from .forms import ProfileForm
 @login_required
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
@@ -81,6 +81,14 @@ def dashboard(request):
         'tasks': tasks,
         'selected_list': selected_list,
     })
+    if request.method == 'POST':
+        form = BackgroundForm(request.POST, instance=request.user.userprofile)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = BackgroundForm(instance=request.user.userprofile)
+    return render(request, 'dashboard.html', {'form': form, 'background': request.user.userprofile.background})
 
 def signup(request):
     if request.method == 'POST':
@@ -158,16 +166,15 @@ def create_or_edit_task(request, task_id=None):
 @login_required
 def profile_customization(request):
     if request.method == 'POST':
-        form = CombinedUserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Your profile was successfully updated!')
+            profile = form.save(commit=False)
+            if 'custom_background' in request.FILES:
+                profile.background = request.FILES['custom_background']
+            elif form.cleaned_data['background_choice'] != 'custom':
+                profile.background = form.cleaned_data['background_choice']
+            profile.save()
             return redirect('dashboard')
     else:
-        form = CombinedUserProfileForm(instance=request.user.userprofile, initial={
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'email': request.user.email,
-        })
-    context = {'form': form}
-    return render(request, 'profile_customization.html', context)
+        form = ProfileForm(instance=request.user.userprofile)
+    return render(request, 'profile_customization.html', {'form': form})
